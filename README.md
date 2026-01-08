@@ -59,38 +59,41 @@ Puis
 Toujours dans le dossier prisma, créez un nouveau fichier `seed.js` et coller le code suivant à l’intérieur:
 
 ```js
-const { PrismaClient } = require('../app/generated/prisma/client');
+import { PrismaClient } from '../generated/prisma/client.ts';
+import photographers from '../data/photographer.json' with { type: 'json' };
+import medias from '../data/media.json' with { type: 'json' };
 
 const prisma = new PrismaClient()
 
 async function main() {
-	await prisma.photographer.createMany({
-		data: // content from ./data/photographer.json
-});
+    await prisma.photographer.createMany({
+        data: photographers
+    });
 
-await prisma.media.createMany({
-		data: // content from ./data/media.json
-});
+    await prisma.media.createMany({
+        data: medias // content from ./data/media.json
+    });
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
+    .then(async () => {
+        await prisma.$disconnect()
+    })
+    .catch(async (e) => {
+        console.error(e)
+        await prisma.$disconnect()
+        process.exit(1)
+    })
 ```
 
 Enfin, ajoutez la nouvelle configuration de prisma dans votre `package.json` :
 
 ```js
   // ajoutez ceci juste en dessous de “version”
-  "prisma": {
-    "seed": "node prisma/seed.js"
-  },
+    "type": "module",
+    "prisma": {
+    "seed": "tsx prisma/seed.js"
+}
 ```
 
 Pour terminer, exécutez la commande `npx prisma db seed` pour insérer les données dans votre BDD. Vous êtes censé ne l’exécuter qu’une **seule** et **unique** fois.
