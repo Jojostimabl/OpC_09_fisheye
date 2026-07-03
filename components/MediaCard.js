@@ -1,15 +1,26 @@
-import Image from "next/image";
+"use client";
 
-export default function MediaCard({ media }) {
-  const asset = media.image ?? media.video;
+import Image from "next/image";
+import { forwardRef } from "react";
+import LikeButton from "@/components/LikeButton";
+
+const MediaCard = forwardRef(function MediaCard(
+  { media, isOpen, onOpen, onLikeChange },
+  ref,
+) {
   const isImage = Boolean(media.image);
 
   return (
-    <li className="media-card">
-      <a
+    <>
+      <button
+        ref={ref}
         className="media-preview"
-        href={`/${asset}`}
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        aria-controls="media-lightbox"
         aria-label={media.title}
+        onClick={onOpen}
       >
         {isImage ? (
           <Image
@@ -24,16 +35,18 @@ export default function MediaCard({ media }) {
             <source src={`/${media.video}`} />
           </video>
         )}
-      </a>
+      </button>
       <div className="media-meta">
         <h2>{media.title}</h2>
-        <p className="media-likes">
-          <span>{media.likes}</span>
-          <span aria-label="likes" className="likes-icon">
-            ♥
-          </span>
-        </p>
+        <LikeButton
+          mediaId={media.id}
+          initialLikes={media.likes}
+          mediaTitle={media.title}
+          onLikeChange={onLikeChange}
+        />
       </div>
-    </li>
+    </>
   );
-}
+});
+
+export default MediaCard;

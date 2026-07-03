@@ -15,3 +15,5 @@ pnpm-debug.log*
 dev.db
 prisma/dev.db
 generated
+
+/lib/generated/prisma

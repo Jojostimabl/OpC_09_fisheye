@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ContactButton from "@/components/ContactButton";
+import ContactModalController from "@/components/ContactModalController";
 
 export default function ProfileHero({ photographer }) {
   return (
@@ -11,7 +11,7 @@ export default function ProfileHero({ photographer }) {
         </p>
         <p className="profile-tagline">{photographer.tagline}</p>
       </div>
-      <ContactButton photographerName={photographer.name} />
+      <ContactModalController photographerName={photographer.name} />
       <Image
         src={`/${photographer.portrait}`}
         alt={photographer.name}

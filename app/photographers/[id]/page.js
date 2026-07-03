@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import FisheyeLogo from "@/components/FisheyeLogo";
-import MediaList from "@/components/MediaList";
-import MediaSort from "@/components/MediaSort";
+import MediaSection from "@/components/MediaSection";
 import ProfileHero from "@/components/ProfileHero";
 import {
   getAllMediasForPhotographer,
   getAllPhotographers,
   getPhotographer,
+  getTotalLikesForPhotographer,
 } from "@/lib/fisheye-data";
+
+export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   const photographers = await getAllPhotographers();
@@ -42,7 +44,10 @@ export default async function PhotographerPage({ params }) {
     notFound();
   }
 
-  const photographerMedias = await getAllMediasForPhotographer(photographer.id);
+  const [photographerMedias, totalLikes] = await Promise.all([
+    getAllMediasForPhotographer(photographer.id),
+    getTotalLikesForPhotographer(photographer.id),
+  ]);
 
   return (
     <>
@@ -57,14 +62,11 @@ export default async function PhotographerPage({ params }) {
       </header>
       <main id="main-content" className="page-shell">
         <ProfileHero photographer={photographer} />
-        <section aria-labelledby="media-title" className="media-section">
-          <div className="section-heading">
-            <h2 id="media-title">Galerie</h2>
-            <p>{photographer.price} EUR/jour</p>
-          </div>
-          <MediaSort />
-          <MediaList medias={photographerMedias} />
-        </section>
+        <MediaSection
+          initialTotalLikes={totalLikes}
+          medias={photographerMedias}
+          photographerPrice={photographer.price}
+        />
       </main>
     </>
   );
