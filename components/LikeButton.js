@@ -66,7 +66,7 @@ export default function LikeButton({
 
       setLikes(nextLikes);
       setIsLiked(data.liked);
-      onLikeChange(delta);
+      onLikeChange(mediaId, delta);
     } catch (error) {
       console.error(error);
     } finally {

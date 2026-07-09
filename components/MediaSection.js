@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import MediaModalController from "@/components/MediaModalController";
 import MediaSort from "@/components/MediaSort";
 import PhotographerStatsBar from "@/components/PhotographerStatsBar";
@@ -11,10 +11,34 @@ export default function MediaSection({
   photographerPrice,
 }) {
   const [totalLikes, setTotalLikes] = useState(initialTotalLikes);
+  const [sortBy, setSortBy] = useState("popularity");
+  const [mediaItems, setMediaItems] = useState(medias);
 
-  function handleLikeChange(delta) {
+  function handleLikeChange(mediaId, delta) {
     setTotalLikes((currentTotal) => currentTotal + delta);
+
+    setMediaItems((currentMedias) =>
+      currentMedias.map((media) =>
+        media.id === mediaId
+          ? { ...media, likes: media.likes + delta }
+          : media,
+      ),
+    );
   }
+
+  const sortedMedias = useMemo(() => {
+    return [...mediaItems].sort((a, b) => {
+      if (sortBy === "popularity") {
+        return b.likes - a.likes;
+      }
+
+      if (sortBy === "date") {
+        return new Date(b.date) - new Date(a.date);
+      }
+
+      return a.title.localeCompare(b.title, "fr", { sensitivity: "base" });
+    });
+  }, [mediaItems, sortBy]);
 
   return (
     <>
@@ -22,13 +46,13 @@ export default function MediaSection({
         <div className="section-heading">
           <h2 id="media-title">Galerie</h2>
         </div>
-        <MediaSort />
+        <MediaSort selectedValue={sortBy} onSortChange={setSortBy} />
         <ul className="media-list" aria-label="Galerie des médias">
-          {medias.map((media, index) => (
+          {sortedMedias.map((media, index) => (
             <MediaModalController
               key={`${media.photographerId}-${media.title}-${media.date}`}
               media={media}
-              medias={medias}
+              medias={sortedMedias}
               initialIndex={index}
               onLikeChange={handleLikeChange}
             />

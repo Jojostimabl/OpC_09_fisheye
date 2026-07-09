@@ -8,21 +8,20 @@ const sortOptions = [
   { label: "Titre", value: "title" },
 ];
 
-export default function MediaSort() {
+export default function MediaSort({ selectedValue, onSortChange }) {
   const labelId = useId();
   const listboxId = useId();
   const triggerRef = useRef(null);
   const optionRefs = useRef([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(sortOptions[0].value);
 
   const selectedIndex = sortOptions.findIndex(
     (option) => option.value === selectedValue,
   );
-  const selectedOption = sortOptions[selectedIndex];
+  const selectedOption = sortOptions[selectedIndex] ?? sortOptions[0];
 
   function selectOption(option) {
-    setSelectedValue(option.value);
+    onSortChange(option.value);
     setIsOpen(false);
     requestAnimationFrame(() => triggerRef.current?.focus());
   }
