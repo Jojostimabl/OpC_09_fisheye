@@ -256,37 +256,41 @@ video {
 
 .contact-dialog {
   position: relative;
-  width: min(100%, 480px);
-  border-radius: 6px;
-  background: var(--color-accent);
+  width: min(100%, 446px);
+  border-radius: 4px;
+  background: #db8876;
   color: #000000;
-  padding: 28px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.25);
+  padding: 16px 24px 26px;
 }
 
 .contact-dialog h1 {
-  margin: 0;
-  font-size: clamp(2rem, 5vw, 3rem);
+  max-width: calc(100% - 56px);
+  margin: 0 0 18px;
+  color: var(--color-ink);
+  font-size: clamp(2.25rem, 5vw, 2.625rem);
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.12;
 }
 
 .contact-dialog h1 span {
   display: block;
-  margin: 0 0 18px;
-  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  margin: 2px 0 0;
+  font-size: inherit;
   font-weight: 400;
 }
 
 .dialog-close {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 16px;
+  right: 20px;
   border: 0;
   background: transparent;
   color: #ffffff;
   cursor: pointer;
-  font-size: 2rem;
-  line-height: 1;
+  font-size: 3rem;
+  line-height: 0.8;
+  padding: 4px;
 }
 
 .dialog-close:focus-visible {
@@ -298,11 +302,13 @@ video {
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .contact-form label {
-  font-size: 1rem;
+  margin-top: 0;
+  font-size: 1.375rem;
+  line-height: 1.25;
 }
 
 .contact-form input,
@@ -310,13 +316,25 @@ video {
   width: 100%;
   border: 0;
   border-radius: 4px;
+  background: #ffffff;
   font: inherit;
   padding: 10px;
 }
 
+.contact-form input {
+  min-height: 46px;
+}
+
+.contact-form textarea {
+  min-height: 113px;
+  resize: vertical;
+}
+
 .contact-form button {
   align-self: flex-start;
-  margin-top: 10px;
+  min-width: 113px;
+  min-height: 46px;
+  margin-top: 12px;
   border: 0;
   border-radius: 4px;
   background: var(--color-brand);
@@ -324,7 +342,7 @@ video {
   cursor: pointer;
   font: inherit;
   font-weight: 700;
-  padding: 12px 28px;
+  padding: 10px 24px;
 }
 
 .contact-form button:hover,
