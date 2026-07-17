@@ -10,7 +10,7 @@ export async function GET(request) {
 
   if (!mediaId || !userKey) {
     return jsonError(
-      "Les param\u00e8tres mediaId et userKey sont requis et doivent \u00eatre valides.",
+      "Les paramètres mediaId et userKey sont requis et doivent être valides.",
       400,
     );
   }
@@ -33,8 +33,8 @@ export async function GET(request) {
 
     return Response.json({ liked: Boolean(existingLike) });
   } catch (error) {
-    console.error("Impossible de r\u00e9cup\u00e9rer le statut du like.", error);
-    return jsonError("Impossible de r\u00e9cup\u00e9rer le statut du like.", 500);
+    console.error("Impossible de récupérer le statut du like.", error);
+    return jsonError("Impossible de récupérer le statut du like.", 500);
   }
 }
 
