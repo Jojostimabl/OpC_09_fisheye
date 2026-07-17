@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import FisheyeLogo from "@/components/FisheyeLogo";
 import MediaSection from "@/components/MediaSection";
@@ -9,8 +8,6 @@ import {
   getPhotographer,
   getTotalLikesForPhotographer,
 } from "@/lib/fisheye-data";
-
-export const dynamic = "force-dynamic";
 
 export async function generateStaticParams() {
   const photographers = await getAllPhotographers();
@@ -56,9 +53,6 @@ export default async function PhotographerPage({ params }) {
       </a>
       <header className="site-header site-header--profile">
         <FisheyeLogo />
-        <Link className="back-link" href="/">
-          Retour
-        </Link>
       </header>
       <main id="main-content" className="page-shell">
         <ProfileHero photographer={photographer} />

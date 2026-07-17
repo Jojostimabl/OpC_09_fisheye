@@ -1,137 +1,101 @@
-# Guide d’installation du Back-end et la BDD SQLite Fisheye
+# FishEye
 
-L’équipe back-end n’ayant pas encore développé les APIs nécessaires au bon fonctionnement de l’application, nous allons utiliser une technique assez répandue dans le prototypage qui consiste à utiliser une base de données SQLite (= données stockées en local).
+Prototype FishEye construit avec Next.js, Prisma et SQLite. L'application
+présente des photographes, leurs médias, un formulaire de contact, une
+lightbox, un tri des médias et des likes persistants.
 
-## Initier la base de données
+## Prérequis
 
-A la racine de votre projet, commencez d’abord par installer prisma avec la commande suivante:
+- Node.js 20.9 ou une version plus récente
+- npm
 
-`npm install prisma -D`
+## Installation
 
-Puis initialisé prisma pour utiliser SQLite:
+Depuis la racine du projet :
 
-`npx prisma init --datasource-provider sqlite`
-
-A ce stade vous devriez maintenant avoir un dossier `prisma` à la racine de votre projet.
-Ouvrez le fichier `schema.prisma` contenu à l’intérieur et remplacez `env(“DATABASE_URL”)` par `"file:dev.db"`
-
-Une fois cela réalisé, toujours dans le fichier schema.prisma, ajoutez à la fin du fichier le code suivant qui va définir les modèles de vos tables:
-
-```js
-model Photographer {
-	id	Int	@id @default(autoincrement())
-	name	String
-	city	String
-	country	String
-	tagline	String
-	price	Int
-	portrait		String
-    medias  Media[]
-}
-
-model Media {
-	id	Int	@id @default(autoincrement())
-	photographer	Photographer	@relation(fields: [photographerId], references: [id])
-	photographerId	Int
-	title	String
-	image	String?
-    video   String?
-	likes	Int
-	date	String
-	price	Int
-}
+```bash
+npm install
 ```
 
-Puis exécutez la commande suivante qui permet de reporter les changements du schéma dans la base de données:
+Le projet utilise SQLite. La base locale est configurée dans
+`prisma.config.ts` et est créée dans le fichier `dev.db`.
 
-`npx prisma migrate dev --name init`
+## Initialiser Prisma et la base de données
 
-## Remplir les données
+Générer le client Prisma :
 
-Vous pouvez maintenant installer le client prisma qui va vous permettre d'interagir avec votre base de données :
-
-`npm install @prisma/client`
-
-Puis
-
-`npx prisma generate`
-
-Toujours dans le dossier prisma, créez un nouveau fichier `seed.js` et coller le code suivant à l’intérieur:
-
-```js
-import { PrismaClient } from '../generated/prisma/client.ts';
-import photographers from '../data/photographer.json' with { type: 'json' };
-import medias from '../data/media.json' with { type: 'json' };
-
-const prisma = new PrismaClient()
-
-async function main() {
-    await prisma.photographer.createMany({
-        data: photographers
-    });
-
-    await prisma.media.createMany({
-        data: medias // content from ./data/media.json
-    });
-}
-
-main()
-    .then(async () => {
-        await prisma.$disconnect()
-    })
-    .catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
+```bash
+npx prisma generate
 ```
 
-Enfin, ajoutez la nouvelle configuration de prisma dans votre `package.json` :
+Appliquer les migrations existantes :
 
-```js
-  // ajoutez ceci juste en dessous de “version”
-    "type": "module",
-    "prisma": {
-    "seed": "tsx prisma/seed.js"
-}
+```bash
+npx prisma migrate dev
 ```
 
-Pour terminer, exécutez la commande `npx prisma db seed` pour insérer les données dans votre BDD. Vous êtes censé ne l’exécuter qu’une **seule** et **unique** fois.
+Charger les photographes et les médias de démonstration :
 
-Vous pouvez consulter vos données en utilisant la fonctionnalité studio de prisma en utilisant la commande `npx prisma studio`.
-
-## Communiquer avec la BDD
-
-Dans le dossier `app` de votre projet, créez un nouveau dossier lib puis un fichier à l’intérieur de ce dernier `prisma-db.js`. Dans ce fichier, insérez le code suivant:
-
-```js
-const { PrismaClient } = require('../generated/prisma/client');
-
-const prisma = new PrismaClient();
-
-export const getAllPhotographers = () => prisma.photographer.findMany();
-
-export const getPhotographer = (id) =>
-  prisma.photographer.findUnique({
-    where: { id },
-  });
-
-export const getAllMediasForPhotographer = (photographerId) =>
-  prisma.media.findMany({
-    where: { photographerId },
-  });
-
-export const updateNumberOfLikes = (mediaId, newNumberOfLikes) =>
-  prisma.media.update({
-    where: { id: mediaId },
-    data: { likes: newNumberOfLikes },
-  });
+```bash
+npx prisma db seed
 ```
 
-Dans ce dernier fichier, vous trouverez toutes les fonctions nécessaires qui vous permettront de communiquer avec la base de données au cours de ce projet. Vous pouvez les appeler directement depuis les server components pour récupérer les données qui vous intéressent.
+La commande de seed supprime les données existantes avant de réinsérer le jeu
+de données présent dans `data/photographer.json` et `data/media.json`.
 
-## Placer les images dans votre projet
+Pour remettre complètement la base à zéro pendant le développement :
 
-Pour terminer, n'oubliez pas déplacer tous les fichiers présents dans le dossier `./assets/` vers le dossier `./public/` à la racine de votre projet NextJS.
+```bash
+npx prisma migrate reset
+```
 
-Si vous souhaitez en savoir plus à propos de l'usage de ce dossier vous pouvez vous référer à cette [page](https://nextjs.org/docs/pages/api-reference/file-conventions/public-folder) de la documentation.
+Cette dernière commande est destructive : elle supprime les likes et toutes
+les modifications locales de la base.
+
+## Lancer le projet
+
+Démarrer le serveur de développement :
+
+```bash
+npm run dev
+```
+
+Ouvrir ensuite [http://localhost:3000](http://localhost:3000).
+
+## Vérifier la production
+
+Créer le build de production :
+
+```bash
+npm run build
+```
+
+Lancer le build généré :
+
+```bash
+npm run start
+```
+
+## Outils utiles
+
+Ouvrir Prisma Studio pour consulter la base locale :
+
+```bash
+npx prisma studio
+```
+
+Créer une nouvelle migration après une modification de
+`prisma/schema.prisma` :
+
+```bash
+npx prisma migrate dev --name description_de_la_modification
+```
+
+## Organisation
+
+- `app/` : routes Next.js, pages, états de chargement et route API des likes
+- `components/` : composants d'interface réutilisables
+- `lib/` : client Prisma et fonctions de lecture de la base
+- `prisma/` : schéma, migrations et script de seed
+- `data/` : données de démonstration utilisées par le seed
+- `public/` : images, vidéos et logo

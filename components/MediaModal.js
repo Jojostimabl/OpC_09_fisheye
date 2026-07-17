@@ -100,14 +100,14 @@ export default function MediaModal({
         aria-modal="true"
         onKeyDown={handleDialogKeyDown}
       >
-        <a
+        <button
           className="lightbox-nav lightbox-nav--previous"
-          href={`/${activeMedia.image ?? activeMedia.video}`}
+          type="button"
           aria-label="Previous image"
           onClick={showPreviousMedia}
         >
           ‹
-        </a>
+        </button>
         <figure className="lightbox-figure">
           <div className="lightbox-media">
             {isImage ? (
@@ -127,14 +127,14 @@ export default function MediaModal({
           </div>
           <figcaption>{activeMedia.title}</figcaption>
         </figure>
-        <a
+        <button
           className="lightbox-nav lightbox-nav--next"
-          href={`/${activeMedia.image ?? activeMedia.video}`}
+          type="button"
           aria-label="Next image"
           onClick={showNextMedia}
         >
           ›
-        </a>
+        </button>
         <button
           ref={closeButtonRef}
           className="lightbox-close"

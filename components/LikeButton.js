@@ -57,7 +57,8 @@ export default function LikeButton({
       });
 
       if (!response.ok) {
-        throw new Error("Unable to update media like");
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error ?? "Unable to update media like");
       }
 
       const data = await response.json();

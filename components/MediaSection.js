@@ -42,12 +42,9 @@ export default function MediaSection({
 
   return (
     <>
-      <section aria-labelledby="media-title" className="media-section">
-        <div className="section-heading">
-          <h2 id="media-title">Galerie</h2>
-        </div>
+      <section aria-label="Galerie des médias" className="media-section">
         <MediaSort selectedValue={sortBy} onSortChange={setSortBy} />
-        <ul className="media-list" aria-label="Galerie des médias">
+        <ul className="media-list">
           {sortedMedias.map((media, index) => (
             <MediaModalController
               key={`${media.photographerId}-${media.title}-${media.date}`}

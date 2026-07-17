@@ -9,6 +9,7 @@ const adapter = new PrismaBetterSqlite3({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+    await prisma.like.deleteMany();
     await prisma.media.deleteMany();
     await prisma.photographer.deleteMany();
 

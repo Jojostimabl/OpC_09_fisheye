@@ -56,6 +56,14 @@ export default function ContactModal({
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    console.info("Formulaire de contact envoy\u00e9 :", {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    });
   }
 
   return (
@@ -88,13 +96,27 @@ export default function ContactModal({
             id="first-name"
             name="firstName"
             type="text"
+            autoComplete="given-name"
+            required
           />
           <label htmlFor="last-name">Nom</label>
-          <input id="last-name" name="lastName" type="text" />
+          <input
+            id="last-name"
+            name="lastName"
+            type="text"
+            autoComplete="family-name"
+            required
+          />
           <label htmlFor="email">Email</label>
-          <input id="email" name="email" type="email" />
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+          />
           <label htmlFor="message">Votre message</label>
-          <textarea id="message" name="message" rows="5" />
+          <textarea id="message" name="message" rows="5" required />
           <button type="submit">Envoyer</button>
         </form>
       </section>
