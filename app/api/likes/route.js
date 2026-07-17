@@ -22,7 +22,7 @@ export async function GET(request) {
     });
 
     if (!media) {
-      return jsonError("M\u00e9dia introuvable.", 404);
+      return jsonError("Média introuvable.", 404);
     }
 
     const existingLike = await prisma.like.findUnique({
@@ -42,7 +42,7 @@ export async function POST(request) {
   const payload = await readJson(request);
 
   if (!payload) {
-    return jsonError("Le corps de la requ\u00eate doit \u00eatre un JSON valide.", 400);
+    return jsonError("Le corps de la requête doit être un JSON valide.", 400);
   }
 
   const mediaId = parseMediaId(payload.mediaId);
@@ -50,7 +50,7 @@ export async function POST(request) {
 
   if (!mediaId || !userKey) {
     return jsonError(
-      "Les param\u00e8tres mediaId et userKey sont requis et doivent \u00eatre valides.",
+      "Les paramètres mediaId et userKey sont requis et doivent être valides.",
       400,
     );
   }
@@ -62,7 +62,7 @@ export async function POST(request) {
     });
 
     if (!media) {
-      return jsonError("M\u00e9dia introuvable.", 404);
+      return jsonError("Média introuvable.", 404);
     }
 
     const result = await prisma.$transaction(async (transaction) => {
@@ -105,8 +105,8 @@ export async function POST(request) {
 
     return Response.json(result);
   } catch (error) {
-    console.error("Impossible de mettre \u00e0 jour le like.", error);
-    return jsonError("Impossible de mettre \u00e0 jour le like.", 500);
+    console.error("Impossible de mettre à jour le like.", error);
+    return jsonError("Impossible de mettre à jour le like.", 500);
   }
 }
 

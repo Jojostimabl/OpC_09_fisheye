@@ -7,9 +7,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <a className="skip-link" href="#main-content">
-        Aller au contenu
-      </a>
       <SiteHeader title="Nos photographes" />
       <main id="main-content" className="page-shell home-page">
         <PhotographerList photographers={photographers} />

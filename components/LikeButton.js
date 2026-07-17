@@ -12,30 +12,31 @@ export default function LikeButton({
   const [isLiked, setIsLiked] = useState(false);
   const [isPending, setIsPending] = useState(false);
 
-  useEffect(() => {
-    const userKey = getUserKey();
-    const controller = new AbortController();
+useEffect(() => {
+  const userKey = getUserKey();
+  let isActive = true;
 
-    async function fetchLikeStatus() {
+  async function fetchLikeStatus() {
+    try {
       const response = await fetch(
         `/api/likes?mediaId=${mediaId}&userKey=${encodeURIComponent(userKey)}`,
-        { signal: controller.signal },
       );
 
-      if (response.ok) {
+      if (isActive && response.ok) {
         const data = await response.json();
         setIsLiked(data.liked);
       }
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-    fetchLikeStatus().catch((error) => {
-      if (error.name !== "AbortError") {
-        console.error(error);
-      }
-    });
+  fetchLikeStatus();
 
-    return () => controller.abort();
-  }, [mediaId]);
+  return () => {
+    isActive = false;
+  };
+}, [mediaId]);
 
   async function handleLike() {
     if (isPending) {

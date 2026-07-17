@@ -48,9 +48,6 @@ export default async function PhotographerPage({ params }) {
 
   return (
     <>
-      <a className="skip-link" href="#main-content">
-        Aller au contenu
-      </a>
       <header className="site-header site-header--profile">
         <FisheyeLogo />
       </header>
